@@ -1,3 +1,6 @@
+#import math
+from math import sqrt
+
 class Vector(object):
 	def __init__(self,coordinates):
 		try:
@@ -35,6 +38,29 @@ class Vector(object):
 		new_coordinates = [c*x for x in self.coordinates]
 		return Vector(new_coordinates)
 
+	def magnitude(self):
+		#magnitude = 0
+		#for x in self.coordinates:
+		#	magnitude += x*x
+		#return math.sqrt(magnitude)
+
+		coordinates_squared = [x**2 for x in self.coordinates]
+		return sqrt(sum(coordinates_squared))
+
+	# calculate unit
+	def direction(self):
+		u = self
+		magnitude = self.magnitude()
+		new_coordinates = [x*(1/magnitude) for x in self.coordinates]
+		
+		return Vector(new_coordinates)
+
+	def normalized(self):
+		try:
+			magnitude = self.magnitude()
+			return self.times_scalar(1./magnitude)
+		except ZeroDivisionError:
+			raise Exception('Cannot normalize the zero vector')
 
 
 
