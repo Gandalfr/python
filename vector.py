@@ -1,12 +1,15 @@
 #import math
-from math import sqrt
+from math import sqrt,acos,pi
+from decimal import Decimal,getcontext
+
+getcontext().prec = 30
 
 class Vector(object):
 	def __init__(self,coordinates):
 		try:
 			if not coordinates:
 				raise ValueError
-			self.coordinates = tuple(coordinates)
+			self.coordinates = tuple([Decimal(x) for x in coordinates])
 			self.dimension = len(coordinates)
 
 		except ValueError:
@@ -35,7 +38,7 @@ class Vector(object):
 		return Vector(new_coordinates)
 
 	def times_scalar(self,c):
-		new_coordinates = [c*x for x in self.coordinates]
+		new_coordinates = [Decimal(c)*x for x in self.coordinates]
 		return Vector(new_coordinates)
 
 	def magnitude(self):
@@ -58,11 +61,28 @@ class Vector(object):
 	def normalized(self):
 		try:
 			magnitude = self.magnitude()
-			return self.times_scalar(1./magnitude)
+			return self.times_scalar(Decimal('1.0')/magnitude)
 		except ZeroDivisionError:
 			raise Exception('Cannot normalize the zero vector')
 
+	def dotProduct(self,v):
+		new_coordinates = [x*y for x,y in zip(self.coordinates,v.coordinates)]
 
+		sum = 0
+		for i in new_coordinates:
+			sum +=i
+		return sum
+	
+	def angle(self,v):
+		m1 = self.magnitude()
+		m2 = v.magnitude()
+		dotP = self.dotProduct(v)
+		print m1,m2,dotP
+		try:
+			result = acos(dotP/(m1*m2))
+			return result
+		except ZeroDivisionError:
+			raise Exception('Cannot caculate angle with the zero vector')
 
 
 
